@@ -39,19 +39,24 @@
           <el-button style="width:100%" @click="loginClick" type="primary">登录</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button style="width:100%" type="primary">注册</el-button>
+          <el-button style="width:100%" @click="register" type="primary">注册</el-button>
         </el-form-item>
       </el-form>
     </div>
     <div class="right">
       <img src="@/assets/login_bg.png" alt />
     </div>
+    <!-- 注册子组件 -->
+    <register ref="registerRef"></register>
   </div>
 </template>
 
 <script>
 // 按需导入
-import { setToken } from '@/utils/token.js'
+import { setToken } from "@/utils/token.js";
+
+// 导入register子组件
+import register from "./register.vue";
 export default {
   data() {
     return {
@@ -87,7 +92,7 @@ export default {
         ],
         password: [
           { required: true, message: "请输入密码", trigger: "blur" },
-          { min: 6, max: 12, message: "长度在 6 到 12 个字符", trigger: "blur" }
+          { min: 6, max: 12, message: "长度在 6 到 12 位", trigger: "blur" }
         ],
         code: [
           { required: true, message: "请输入验证码", trigger: "blur" },
@@ -106,6 +111,9 @@ export default {
         ]
       }
     };
+  },
+  components: {
+    register
   },
   methods: {
     // 获取验证码
@@ -138,6 +146,7 @@ export default {
         */
 
         //第二种：使用promise(类似于同步操作，本质是异步操作，避免回调地狱)来处理发送axios请求(asyns 写在 await 离的最近的函数)
+        // this.$axios.post("/login", this.loginForm) 返回的是promise对象 实际开发用的比较多
         const res = await this.$axios.post("/login", this.loginForm);
         if (res.data.code === 200) {
           console.log(res);
@@ -146,15 +155,17 @@ export default {
             type: "success"
           });
           // 成功之后保存token
-          setToken(res.data.data.token)
+          setToken(res.data.data.token);
 
           // 跳转到后台管理页面
-          this.$router.push('/layout')
-
+          this.$router.push("/layout");
         } else {
           this.$message.error(res.data.message);
         }
       });
+    },
+    register() {
+      this.$refs.registerRef.dialogVisible = true;
     }
   }
 };
