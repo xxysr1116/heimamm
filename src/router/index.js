@@ -1,15 +1,21 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 // 导入组件
-// 默认login下面的index.vue
+// 默认login下面的index.vue  @ === src
 import Login from '@/views/login/index.vue'
 import Layout from '@/views/layout/index.vue'
 // import Login from '../views/login/index.vue'
 // import Layout from '../views/layout/index.vue'
 
+import Chart from '@/views/layout/chart'
+import User from '@/views/layout/user'
+import Enterprise from '@/views/layout/enterprise'
+import Question from '@/views/layout/question'
+import Subject from '@/views/layout/subject'
+
 
 // 按需导入
-import {getToken} from '@/utils/token.js'
+import { getToken } from '@/utils/token.js'
 // 全局注册
 Vue.use(VueRouter)
 
@@ -17,9 +23,18 @@ Vue.use(VueRouter)
 let router = new VueRouter({
     routes: [
         // 重定向
-        { path: '*', redirect: '/login' },
+        { path: '/', redirect: '/login' },
         { path: '/login', component: Login },
-        { path: '/layout', component: Layout }
+        {
+            path: '/layout', component: Layout, children: [
+                // 嵌套路由：path不需要写'/chart', 以 / 开头的嵌套路径会被当作根路径
+                { path: 'chart', component: Chart },
+                { path: 'user', component: User },
+                { path: 'enterprise', component: Enterprise },
+                { path: 'question', component: Question },
+                { path: 'subject', component: Subject }
+            ]
+        }
     ]
 })
 
