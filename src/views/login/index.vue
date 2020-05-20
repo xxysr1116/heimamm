@@ -149,7 +149,7 @@ export default {
         // this.$axios.post("/login", this.loginForm) 返回的是promise对象 实际开发用的比较多
         const res = await this.$axios.post("/login", this.loginForm);
         if (res.data.code === 200) {
-          console.log(res);
+          // console.log(res);
           this.$message({
             message: "登录成功~",
             type: "success"
