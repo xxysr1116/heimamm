@@ -15,7 +15,7 @@
     <el-container>
       <el-aside width="auto">
         <!-- router ：是否使用 vue-router 的模式，启用该模式会在激活导航时以 index 作为 path 进行路由跳转 -->
-        <el-menu router default-active="3" class="el-menu-vertical-demo" :collapse="isCollapse">
+        <el-menu router :default-active="defaultActive" class="el-menu-vertical-demo" :collapse="isCollapse">
           <el-menu-item index="/layout/chart">
             <i class="el-icon-pie-chart"></i>
             <span slot="title">数据预览</span>
@@ -53,7 +53,8 @@ export default {
     return {
       avatarz: "", //用户的头像
       username: "", //昵称
-      isCollapse: false //是否收起折叠菜单
+      isCollapse: false , //是否收起折叠菜单
+      defaultActive:''  // 菜单选中的值
     };
   },
   methods: {
@@ -91,7 +92,11 @@ export default {
     }
   },
   created() {
+    // this.$router 相当于一个全局的路由器对象，包含了很多属性和对象（比如 history 对象），任何页面都可以调用其 push(), replace(), go() 等方法。
+    // this.$route 表示当前路由对象，每一个路由都会有一个 route 对象，是一个局部的对象，可以获取对应的 name, path, params, query 等属性。
+    this.defaultActive = this.$route.fullPath;
     this.getuserInfoData();
+    // console.log(this.$route);
   }
 };
 </script>

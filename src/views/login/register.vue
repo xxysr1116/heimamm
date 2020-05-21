@@ -58,6 +58,7 @@
 
 <script>
 export default {
+  name:'Register',
   data() {
     return {
       // 头像的url

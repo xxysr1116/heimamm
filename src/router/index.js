@@ -39,6 +39,10 @@ let router = new VueRouter({
 })
 
 // 全局前置守卫(监控路由跳转，设置登录权限)
+/*
+    在vue中，只要发生了路由跳转，他都会来到这个方法中
+    相当于拦截了所有的路由跳转，然后我们再根据实际情况处理
+*/
 router.beforeEach((to, from, next) => {
     // console.log('to', to);
     // console.log('from', from);
