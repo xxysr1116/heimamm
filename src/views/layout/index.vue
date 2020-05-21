@@ -15,7 +15,12 @@
     <el-container>
       <el-aside width="auto">
         <!-- router ：是否使用 vue-router 的模式，启用该模式会在激活导航时以 index 作为 path 进行路由跳转 -->
-        <el-menu router :default-active="defaultActive" class="el-menu-vertical-demo" :collapse="isCollapse">
+        <el-menu
+          router
+          :default-active="defaultActive"
+          class="el-menu-vertical-demo"
+          :collapse="isCollapse"
+        >
           <el-menu-item index="/layout/chart">
             <i class="el-icon-pie-chart"></i>
             <span slot="title">数据预览</span>
@@ -53,8 +58,8 @@ export default {
     return {
       avatarz: "", //用户的头像
       username: "", //昵称
-      isCollapse: false , //是否收起折叠菜单
-      defaultActive:''  // 菜单选中的值
+      isCollapse: false, //是否收起折叠菜单
+      defaultActive: "" // 菜单选中的值
     };
   },
   methods: {

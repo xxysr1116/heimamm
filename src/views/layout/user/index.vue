@@ -4,13 +4,13 @@
     <!-- 搜索部分 -->
     <el-card>
       <el-form inline :model="userForm" ref="userFormRef" label-width="80px">
-        <el-form-item label="用户名称">
+        <el-form-item label="用户名称" prop="username">
           <el-input v-model="userForm.username"></el-input>
         </el-form-item>
-        <el-form-item label="用户邮箱">
+        <el-form-item label="用户邮箱" prop="email">
           <el-input v-model="userForm.email"></el-input>
         </el-form-item>
-        <el-form-item label="角色">
+        <el-form-item label="角色" prop="role_id">
           <el-select style="width:150px;" v-model="userForm.role_id" placeholder="请选择">
             <el-option label="超级管理员" value="1"></el-option>
             <el-option label="管理员" value="2"></el-option>
@@ -19,9 +19,9 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">搜索</el-button>
-          <el-button type="default">清除</el-button>
-          <el-button type="primary">+新增用户</el-button>
+          <el-button @click="search" type="primary">搜索</el-button>
+          <el-button @click="clear" type="default">清除</el-button>
+          <el-button @click="add" type="primary">+新增用户</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -32,7 +32,7 @@
         <el-table-column type="index" label="序号" width="80"></el-table-column>
         <el-table-column prop="username" label="用户名"></el-table-column>
         <el-table-column prop="phone" label="电话"></el-table-column>
-        <el-table-column prop="email" label="邮箱"></el-table-column>
+        <el-table-column prop="email" label="邮箱" width="180"></el-table-column>
         <el-table-column prop="role" label="角色"></el-table-column>
         <el-table-column prop="remark" label="备注"></el-table-column>
         <el-table-column label="状态">
@@ -44,18 +44,38 @@
         <el-table-column label="操作" width="280">
           <template slot-scope="scope">
             <el-button type="primary">编辑</el-button>
-            <el-button :type="scope.row.status === 0 ? 'success' : 'info'">{{scope.row.status === 0 ? '启用' : '禁用'}}</el-button>
-            <el-button type="default">删除</el-button>
+            <el-button
+              @click="changeStatus(scope.row.id)"
+              :type="scope.row.status === 0 ? 'success' : 'info'"
+            >{{scope.row.status === 0 ? '启用' : '禁用'}}</el-button>
+            <el-button @click="delteUser(scope.row.id,scope.row.username)" type="default">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
+      <div style="margin-top:15px;text-align:center">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="page"
+          :page-sizes="[2, 5, 10, 20]"
+          :page-size="2"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+        ></el-pagination>
+      </div>
     </el-card>
+    <!-- 新增或编辑子组件 -->
+    <UserEdit ref="userEditRef"></UserEdit>
   </div>
 </template>
 
 <script>
+import UserEdit from "./user-add-or-updata";
 export default {
-  name:'UserList',
+  name: "UserList",
+  components: {
+    UserEdit
+  },
   data() {
     return {
       userForm: {
@@ -92,6 +112,76 @@ export default {
         // 获取总条数
         this.total = res.data.data.pagination.total;
       }
+    },
+    // 搜索
+    search() {
+      this.page = 1; // 从第一页开始搜索
+      this.getUserData();
+    },
+    // 清除
+    clear() {
+      // 方法1：
+      // this.userForm.username = "";
+      // this.userForm.email = "";
+      // this.userForm.role_id = "";
+
+      // 方法2：调用form表单的resetFields方法(对整个表单进行重置，将所有字段值重置为初始值并移除校验结果)
+      // 注意：调用resetFields方法，需在el-form-item标签加上prop
+      this.$refs.userFormRef.resetFields();
+      this.search();
+    },
+    // 分页条的页容量发生了改变
+    handleSizeChange(val) {
+      // console.log(`每页 ${val} 条`);
+      // 把页容量设置给每一页的条数
+      this.limit = val;
+      this.search();
+    },
+    // 分页条的当前页发生了改变
+    handleCurrentChange(val) {
+      // console.log(`当前页: ${val}`);
+      this.page = val;
+      this.getUserData();
+    },
+    // 更改当前行的状态
+    async changeStatus(id) {
+      const res = await this.$axios.post("/user/status", { id });
+      // console.log(res);
+      if (res.data.code === 200) {
+        this.$message({
+          type: "success",
+          message: "更改状态成功!"
+        });
+        // 重新查询
+        this.search();
+      }
+    },
+    // 删除
+    delteUser(id, username) {
+      // 提示
+      this.$confirm(`确定删除 ${username} 该用户吗？`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          const res = await this.$axios.post("/user/remove", { id });
+          // console.log(res);
+          if (res.data.code === 200) {
+            this.$message({
+              type: "success",
+              message: "删除成功!"
+            });
+          }
+          // 更新数据
+          this.getUserData();
+        })
+        .catch(() => {});
+    },
+    add() {
+      // 让新增用户的对话框显示出来
+      this.$refs.userEditRef.dialogVisible = true;
+      this.$refs.userEditRef.mode = "add";
     }
   }
 };

@@ -1,0 +1,154 @@
+<template>
+  <div class="userEdit">
+    <el-dialog center :visible.sync="dialogVisible" width="600px">
+      <div slot="title" class="title">{{mode === 'add' ? '新增用户' : '修改用户'}}</div>
+      <el-form :model="usreForm" :rules="rules" ref="usreFormRef" label-width="80px">
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="usreForm.username"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="usreForm.email"></el-input>
+        </el-form-item>
+        <el-form-item label="电话" prop="phone">
+          <el-input v-model="usreForm.phone"></el-input>
+        </el-form-item>
+        <el-form-item label="角色" prop="role_id">
+          <el-select v-model="usreForm.role_id" placeholder="请选择">
+            <el-option label="超级管理员" value="1"></el-option>
+            <el-option label="管理员" value="2"></el-option>
+            <el-option label="老师" value="3"></el-option>
+            <el-option label="学生" value="4"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="状态" prop="status">
+          <el-select v-model="usreForm.status" placeholder="请选择状态">
+            <el-option label="启用" value="1"></el-option>
+            <el-option label="禁用" value="0"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="用户备注" prop="remark">
+          <el-input v-model="usreForm.remark"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submit">确 定</el-button>
+      </span>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      dialogVisible: false,
+      mode: "", // 模式，add 代表新增  edit 代表修改
+      usreForm: {
+        username: "", //用户名
+        email: "", //邮箱
+        phone: "", //电话
+        role_id: "", //角色 1、超级管理员 2、管理员 3、老师 4、学生
+        status: "", //状态 1、启用 0、禁用
+        remark: "" //备注
+      },
+      rules: {
+        username: [{ required: true, message: "请输入昵称", trigger: "blur" }],
+        email: [
+          {
+            required: true,
+            validator: (rule, value, callback) => {
+              if (!value) {
+                return callback(new Error("邮箱不能为空"));
+              }
+              // 邮箱正则
+              const res = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+              if (!res.test(value)) {
+                return callback(new Error("邮箱不合法!"));
+              }
+              callback();
+            },
+            trigger: "blur"
+          }
+        ],
+        phone: [
+          // { required: true, message: '请输入手机号', trigger: 'blur' },
+          //  { min: 11, max: 11, message: '手机号必须是11位', trigger: 'blur' }
+          {
+            required: true,
+            validator: (rule, value, callback) => {
+              if (!value) {
+                return callback(new Error("手机号不能为空"));
+              }
+              // 手机号正则
+              const res = /^1[3456789][0-9]{9}$/;
+              if (!res.test(value)) {
+                return callback(new Error("手机号不合法"));
+              }
+              callback();
+            },
+            trigger: "blur"
+          }
+        ],
+        role_id: [
+          { required: true, message: "请选择用户角色", trigger: "change" }
+        ],
+        status: [
+          { required: true, message: "请选择用户状态", trigger: "change" }
+        ],
+        remark: [
+          { required: true, message: "用户备注不能为空", trigger: "blur" }
+        ]
+      }
+    };
+  },
+  methods: {
+    submit() {
+      this.$refs.usreFormRef.validate(async valid => {
+        if (!valid) return;
+        let res = null;
+        if (this.mode === "add") {
+          res = await this.$axios.post("/user/add", this.usreForm);
+        } else {
+          // 修改
+        }
+
+        if (res.data.code === 200) {
+          // 提示
+          this.$message({
+            type: "success",
+            message: this.mode === "add" ? "新增成功!" : "编辑成功"
+          });
+
+          // 关闭当前对话框
+          this.dialogVisible = false;
+          // 刷新父组件中的数据
+          // 第一种 this.$emit()
+          // 第二种 this.$parent.search()
+          this.$parent.search();
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
+    }
+  }
+};
+</script>
+
+<style lang="less">
+.userEdit {
+  .title {
+    height: 53px;
+    text-align: center;
+    color: #fff;
+    background-color: #0e9cfa;
+    line-height: 53px;
+  }
+  .el-dialog__header {
+    padding: 0;
+  }
+  .el-dialog__headerbtn .el-dialog__close {
+    color: #fff;
+  }
+}
+</style>
