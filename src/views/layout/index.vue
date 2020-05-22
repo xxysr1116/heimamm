@@ -21,6 +21,10 @@
           class="el-menu-vertical-demo"
           :collapse="isCollapse"
         >
+          <el-menu-item index="/layout/welcome">
+            <i class="el-icon-date"></i>
+            <span slot="title">个人信息</span>
+          </el-menu-item>
           <el-menu-item index="/layout/chart">
             <i class="el-icon-pie-chart"></i>
             <span slot="title">数据预览</span>
@@ -100,6 +104,7 @@ export default {
     // this.$router 相当于一个全局的路由器对象，包含了很多属性和对象（比如 history 对象），任何页面都可以调用其 push(), replace(), go() 等方法。
     // this.$route 表示当前路由对象，每一个路由都会有一个 route 对象，是一个局部的对象，可以获取对应的 name, path, params, query 等属性。
     this.defaultActive = this.$route.fullPath;
+    // console.log(this.defaultActive);
     this.getuserInfoData();
     // console.log(this.$route);
   }

@@ -12,6 +12,11 @@ import User from '@/views/layout/user'
 import Enterprise from '@/views/layout/enterprise'
 import Question from '@/views/layout/question'
 import Subject from '@/views/layout/subject'
+import Welcome from '@/views/layout/welcome/welcome'
+// import Welcome from '../views/layout/welcome/welcome.vue'
+
+// 测试路由
+import Parent from '@/test/parent-child-bother/parent'
 
 
 // 按需导入
@@ -32,9 +37,14 @@ let router = new VueRouter({
                 { path: 'user', component: User },
                 { path: 'enterprise', component: Enterprise },
                 { path: 'question', component: Question },
-                { path: 'subject', component: Subject }
+                { path: 'subject', component: Subject },
+                { path: 'welcome', component: Welcome }
             ]
-        }
+        },
+        // 下面是测试的路由
+        // { path: "/slot1", component: Slot1 },
+        // { path: "/slot2", component: Slot2 },
+        { path: "/parent", component: Parent },
     ]
 })
 

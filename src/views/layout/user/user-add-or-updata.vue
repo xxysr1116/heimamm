@@ -2,32 +2,32 @@
   <div class="userEdit">
     <el-dialog center :visible.sync="dialogVisible" width="600px">
       <div slot="title" class="title">{{mode === 'add' ? '新增用户' : '修改用户'}}</div>
-      <el-form :model="usreForm" :rules="rules" ref="usreFormRef" label-width="80px">
+      <el-form :model="userForm" :rules="rules" ref="userFormRef" label-width="80px">
         <el-form-item label="用户名" prop="username">
-          <el-input v-model="usreForm.username"></el-input>
+          <el-input v-model="userForm.username"></el-input>
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
-          <el-input v-model="usreForm.email"></el-input>
+          <el-input v-model="userForm.email"></el-input>
         </el-form-item>
         <el-form-item label="电话" prop="phone">
-          <el-input v-model="usreForm.phone"></el-input>
+          <el-input v-model="userForm.phone"></el-input>
         </el-form-item>
         <el-form-item label="角色" prop="role_id">
-          <el-select v-model="usreForm.role_id" placeholder="请选择">
-            <el-option label="超级管理员" value="1"></el-option>
-            <el-option label="管理员" value="2"></el-option>
-            <el-option label="老师" value="3"></el-option>
-            <el-option label="学生" value="4"></el-option>
+          <el-select v-model="userForm.role_id" placeholder="请选择">
+            <el-option label="超级管理员" :value="1"></el-option>
+            <el-option label="管理员" :value="2"></el-option>
+            <el-option label="老师" :value="3"></el-option>
+            <el-option label="学生" :value="4"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="状态" prop="status">
-          <el-select v-model="usreForm.status" placeholder="请选择状态">
-            <el-option label="启用" value="1"></el-option>
-            <el-option label="禁用" value="0"></el-option>
+          <el-select v-model="userForm.status" placeholder="请选择状态">
+            <el-option label="启用" :value="1"></el-option>
+            <el-option label="禁用" :value="0"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="用户备注" prop="remark">
-          <el-input v-model="usreForm.remark"></el-input>
+          <el-input v-model="userForm.remark"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer">
@@ -44,7 +44,7 @@ export default {
     return {
       dialogVisible: false,
       mode: "", // 模式，add 代表新增  edit 代表修改
-      usreForm: {
+      userForm: {
         username: "", //用户名
         email: "", //邮箱
         phone: "", //电话
@@ -104,13 +104,14 @@ export default {
   },
   methods: {
     submit() {
-      this.$refs.usreFormRef.validate(async valid => {
+      this.$refs.userFormRef.validate(async valid => {
         if (!valid) return;
         let res = null;
         if (this.mode === "add") {
-          res = await this.$axios.post("/user/add", this.usreForm);
+          res = await this.$axios.post("/user/add", this.userForm);
         } else {
           // 修改
+          res = await this.$axios.post('/user/edit',this.userForm);
         }
 
         if (res.data.code === 200) {
@@ -126,6 +127,7 @@ export default {
           // 第一种 this.$emit()
           // 第二种 this.$parent.search()
           this.$parent.search();
+
         } else {
           this.$message.error(res.data.message);
         }

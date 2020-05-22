@@ -3,6 +3,7 @@
     <!-- 卡片布局 -->
     <!-- 搜索部分 -->
     <el-card>
+      <!-- :inline = 'true' === inline -->
       <el-form inline :model="userForm" ref="userFormRef" label-width="80px">
         <el-form-item label="用户名称" prop="username">
           <el-input v-model="userForm.username"></el-input>
@@ -43,7 +44,7 @@
         </el-table-column>
         <el-table-column label="操作" width="280">
           <template slot-scope="scope">
-            <el-button type="primary">编辑</el-button>
+            <el-button type="primary" @click="editUser(scope.row)">编辑</el-button>
             <el-button
               @click="changeStatus(scope.row.id)"
               :type="scope.row.status === 0 ? 'success' : 'info'"
@@ -178,10 +179,39 @@ export default {
         })
         .catch(() => {});
     },
+    // 新增用户
     add() {
       // 让新增用户的对话框显示出来
       this.$refs.userEditRef.dialogVisible = true;
       this.$refs.userEditRef.mode = "add";
+
+      // this.$refs.userEditRef.usreForm = {
+      //   username: "", //用户名
+      //   email: "", //邮箱
+      //   phone: "", //电话
+      //   role_id: "", //角色 1、超级管理员 2、管理员 3、老师 4、学生
+      //   status: "", //状态 1、启用 0、禁用
+      //   remark: "" //备注
+      // };
+
+      this.$nextTick(() => {
+      //   // dialog中的form表单渲染完毕之后，会自动执行该回调函数
+      //   this.$refs.userEditRef.$refs.usreFormRef.clearValidate();
+      //   // 要想使用 clearValidate 和 resetFields 需要给el-form-item 设置prop
+        this.$refs.userEditRef.$refs.userFormRef.resetFields()
+      });
+    },
+    // 修改用户
+    editUser(row) {
+      console.log(row);
+      this.$refs.userEditRef.dialogVisible = true;
+      // 深拷贝，把row复制一份，交给userForm。这样就不会指向同一地址(引用类型)
+      this.$refs.userEditRef.userForm = JSON.parse(JSON.stringify(row));
+      this.$refs.userEditRef.mode = "edit";
+      this.$nextTick(() => {
+        // 如果第一次点击编辑的时候，也需要等form表单渲染完，才把校验规则去掉
+        this.$refs.userEditRef.$refs.userFormRef.clearValidate();
+      });
     }
   }
 };
