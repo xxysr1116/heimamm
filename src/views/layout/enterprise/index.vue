@@ -42,11 +42,12 @@
         </el-table-column>
         <el-table-column label="操作" width="280">
           <template slot-scope="scope">
-            <el-button type="primary">编辑</el-button>
+            <el-button @click="edit(scope.row)" type="primary">编辑</el-button>
             <el-button
+              @click="changeStatus(scope.row.id)"
               :type="scope.row.status === 0 ? 'success' : 'info'"
             >{{scope.row.status === 0 ? '启用' : '禁用'}}</el-button>
-            <el-button>删除</el-button>
+            <el-button @click="del(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -62,12 +63,18 @@
         ></el-pagination>
       </div>
     </el-card>
+    <!-- 子组件触发父组件事件 ：this.$emit -- (自定义事件,参数) $emit  @search 子组件的自定义事件 search-> 调用父组件的search方法 -->
+    <enterprise-edit ref="enterpriseEditRef" @search="search"></enterprise-edit>
   </div>
 </template>
 
 <script>
+import enterpriseEdit from "@/views/layout/enterprise/enterprise-add-or-update";
 export default {
   name: "EnterPrise",
+  components: {
+    enterpriseEdit
+  },
   data() {
     return {
       searchForm: {
@@ -122,7 +129,54 @@ export default {
       this.page = val;
       this.getEnterpriseListData();
     },
-    add() {}
+    async changeStatus(id) {
+      const res = await this.$axios.post("/enterprise/status", { id });
+      if (res.data.code === 200) {
+        this.$message({
+          message: "更改状态成功!",
+          type: "success"
+        });
+      }
+      // 刷新
+      this.getEnterpriseListData();
+    },
+    del(id) {
+      this.$confirm("确认要删除该数据吗？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          const res = await this.$axios.post("/enterprise/remove", { id });
+          if (res.data.code === 200) {
+            this.$message({
+              message: "删除成功!",
+              type: "success"
+            });
+            // 刷新
+            this.search();
+          }
+        })
+        .catch(() => {});
+    },
+    add() {
+      this.$refs.enterpriseEditRef.mode = "add";
+      this.$refs.enterpriseEditRef.dialogVisible = true;
+    },
+    edit(row) {
+      // console.log(row);
+      const { id, eid, intro, name, remark, short_name } = row; //es6：解构语法
+      this.$refs.enterpriseEditRef.enterpriseForm = {
+        id,
+        eid,
+        intro,
+        name,
+        remark,
+        short_name
+      };
+      this.$refs.enterpriseEditRef.mode = "edit";
+      this.$refs.enterpriseEditRef.dialogVisible = true;
+    }
   }
 };
 </script>

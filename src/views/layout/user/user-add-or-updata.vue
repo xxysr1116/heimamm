@@ -110,8 +110,12 @@ export default {
         if (this.mode === "add") {
           res = await this.$axios.post("/user/add", this.userForm);
         } else {
+          // 直接解构row对象会好一些
+          // scope.row复制一份给uerForm(直接复制一份，比较简便，也可以一个个复制)，其他数据不需要的数据，就把它删了
+          delete this.userForm.create_time;
+          delete this.userForm.update_time;
           // 修改
-          res = await this.$axios.post('/user/edit',this.userForm);
+          res = await this.$axios.post("/user/edit", this.userForm);
         }
 
         if (res.data.code === 200) {
@@ -127,7 +131,6 @@ export default {
           // 第一种 this.$emit()
           // 第二种 this.$parent.search()
           this.$parent.search();
-
         } else {
           this.$message.error(res.data.message);
         }
