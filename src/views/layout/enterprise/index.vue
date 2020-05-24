@@ -57,7 +57,7 @@
           @current-change="handleCurrentChange"
           :current-page="page"
           :page-sizes="[2, 5, 10, 20]"
-          :page-size="100"
+          :page-size="2"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
         ></el-pagination>
@@ -161,7 +161,17 @@ export default {
     },
     add() {
       this.$refs.enterpriseEditRef.mode = "add";
+      this.$refs.enterpriseEditRef.enterpriseForm = {
+        eid: "", //企业编号
+        name: "", //企业名称
+        short_name: "", //企业简称
+        intro: "", //企业简介
+        remark: "" //企业备注
+      };
       this.$refs.enterpriseEditRef.dialogVisible = true;
+      // this.$nextTick(() => {
+      //   this.$refs.enterpriseEditRef.$refs.enterpriseFormRef.clearValidate();
+      // });
     },
     edit(row) {
       // console.log(row);
@@ -176,6 +186,10 @@ export default {
       };
       this.$refs.enterpriseEditRef.mode = "edit";
       this.$refs.enterpriseEditRef.dialogVisible = true;
+      // 如果写在子组件呢？用watch监听dialogVisible的值。
+      // this.$nextTick(() => {
+      //   this.$refs.enterpriseEditRef.$refs.enterpriseFormRef.clearValidate();
+      // });
     }
   }
 };

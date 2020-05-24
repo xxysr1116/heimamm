@@ -135,7 +135,7 @@ export default {
           this.$message.error(res.data.message);
         }
       });
-    }
+    },
   }
 };
 </script>

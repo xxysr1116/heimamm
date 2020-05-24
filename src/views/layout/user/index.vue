@@ -185,20 +185,21 @@ export default {
       this.$refs.userEditRef.dialogVisible = true;
       this.$refs.userEditRef.mode = "add";
 
-      // this.$refs.userEditRef.usreForm = {
-      //   username: "", //用户名
-      //   email: "", //邮箱
-      //   phone: "", //电话
-      //   role_id: "", //角色 1、超级管理员 2、管理员 3、老师 4、学生
-      //   status: "", //状态 1、启用 0、禁用
-      //   remark: "" //备注
-      // };
+      this.$refs.userEditRef.usreForm = {
+        username: "", //用户名
+        email: "", //邮箱
+        phone: "", //电话
+        role_id: "", //角色 1、超级管理员 2、管理员 3、老师 4、学生
+        status: "", //状态 1、启用 0、禁用
+        remark: "" //备注
+      };
 
       this.$nextTick(() => {
-      //   // dialog中的form表单渲染完毕之后，会自动执行该回调函数
-      //   this.$refs.userEditRef.$refs.usreFormRef.clearValidate();
-      //   // 要想使用 clearValidate 和 resetFields 需要给el-form-item 设置prop
-        this.$refs.userEditRef.$refs.userFormRef.resetFields()
+        // // dialog中的form表单渲染完毕之后，会自动执行该回调函数
+        this.$refs.userEditRef.$refs.usreFormRef.clearValidate();
+        // // 要想使用 clearValidate 和 resetFields 需要给el-form-item 设置prop
+        // 调用resetFields()方法，当第一次点击编辑的时候，无法在新增用户的时候清空内容与清除校验
+        // this.$refs.userEditRef.$refs.userFormRef.resetFields()
       });
     },
     // 修改用户

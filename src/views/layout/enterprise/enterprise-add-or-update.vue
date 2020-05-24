@@ -86,6 +86,19 @@ export default {
         // this.$parent.search();
       });
     }
+  },
+  watch: {
+    dialogVisible(newValue) {
+      // 这种写法在打开窗口的时候，清除校验的时候，会有红色校验一闪而过
+      // if (newValue) {
+      //   this.$nextTick(() => {
+      //     this.$refs.enterpriseFormRef.clearValidate();
+      //   });
+      // }
+      if (!newValue) {
+        this.$refs.enterpriseFormRef.clearValidate();
+      }
+    }
   }
 };
 </script>
