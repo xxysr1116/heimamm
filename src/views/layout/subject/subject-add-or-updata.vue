@@ -82,7 +82,7 @@ export default {
     }
   },
   watch: {
-    // 监控窗口的开关，在窗口关闭的时候，清除校验规则
+    // 监控窗口的开关，在窗口关闭的时候，清除校验规则(新增与编辑的校验规则)
     dialogVisible(newValue) {
       if (!newValue) {
         this.$refs.subjectFormRef.clearValidate();

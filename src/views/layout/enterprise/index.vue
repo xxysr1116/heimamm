@@ -47,7 +47,7 @@
               @click="changeStatus(scope.row.id)"
               :type="scope.row.status === 0 ? 'success' : 'info'"
             >{{scope.row.status === 0 ? '启用' : '禁用'}}</el-button>
-            <el-button @click="del(scope.row.id)">删除</el-button>
+            <el-button type="danger" @click="del(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

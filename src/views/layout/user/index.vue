@@ -49,7 +49,7 @@
               @click="changeStatus(scope.row.id)"
               :type="scope.row.status === 0 ? 'success' : 'info'"
             >{{scope.row.status === 0 ? '启用' : '禁用'}}</el-button>
-            <el-button @click="delteUser(scope.row.id,scope.row.username)" type="default">删除</el-button>
+            <el-button @click="delteUser(scope.row.id,scope.row.username)" type="danger">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

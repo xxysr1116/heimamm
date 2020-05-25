@@ -27,7 +27,7 @@
     </el-card>
     <!-- 内容与分页部分 -->
     <el-card style="margin-top:15px">
-      <el-table :data="subjectList" border>
+      <el-table :data="subjectList" border stripe>
         <el-table-column type="index" label="序号" width="80"></el-table-column>
         <el-table-column prop="rid" label="学科编号"></el-table-column>
         <el-table-column prop="name" label="学科名称"></el-table-column>
@@ -41,14 +41,14 @@
             >{{scope.row.status === 0 ? '禁用' : '启用'}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="rid" label="操作" width="280">
+        <el-table-column label="操作" width="280">
           <template slot-scope="scope">
             <el-button @click="edit(scope.row)" type="primary">编辑</el-button>
             <el-button
               @click="changeStatus(scope.row.id)"
               :type="scope.row.status === 0 ? 'success' : 'info'"
             >{{scope.row.status === 0 ? '启用' : '禁用'}}</el-button>
-            <el-button @click="del(scope.row.id)">删除</el-button>
+            <el-button type="danger" @click="del(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

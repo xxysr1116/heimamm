@@ -17,6 +17,8 @@ import Welcome from '@/views/layout/welcome/welcome'
 
 // 测试路由
 import Parent from '@/test/parent-child-bother/parent'
+import Slot1 from '@/test/slot1/parent'
+import Slot2 from '@/test/slot2/parent'
 import Slot3 from '@/test/slot3'
 
 
@@ -43,8 +45,8 @@ let router = new VueRouter({
             ]
         },
         // 下面是测试的路由
-        // { path: "/slot1", component: Slot1 },
-        // { path: "/slot2", component: Slot2 },
+        { path: "/slot1", component: Slot1 },
+        { path: "/slot2", component: Slot2 },
         { path: "/parent", component: Parent },
         { path: "/slot3", component: Slot3 }
     ]
