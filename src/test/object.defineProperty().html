@@ -8,8 +8,8 @@
 </head>
 
 <body>
-    <button @click="changeName">更改name的值</button>
-    <button @click="changeName2">再次更改name的值</button>
+    <button onclick="changeName()">更改name的值</button>
+    <button onclick="changeName2()">再次更改name的值</button>
     <div id="test"></div>
     <script>
         /**
@@ -29,18 +29,19 @@
             set: function (val) {
                 document.getElementById('test').innerHTML = val;
                 temp = val
+                console.log(person.name);
             }
         })
 
         function changeName() {
             person.name = '王五';
+
         }
 
         function changeName2() {
             person.name = '刘六';
         }
 
-        console.log('set----', person.name);
 
     </script>
 </body>
