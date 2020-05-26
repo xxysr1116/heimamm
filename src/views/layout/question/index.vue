@@ -117,7 +117,14 @@
         <el-table-column label="题型">
           <!-- 需自定义：作用域插槽 -->
           <template slot-scope="scope">
+            <!--  直接这样写最直接 -->
             <span>{{typeObj[scope.row.type]}}</span>
+            <!-- 使用调用方法的形式，可以：既可以接收参数，也可以获取到this -->
+            <!-- <span>{{formatType(scope.row.type)}}</span> -->
+            <!-- 过滤器发现不好使: 过滤器中使用this发现是undefined -->
+            <!-- {{scope.row.type | formatType}} -->
+            <!-- 计算属性不好使: 无法传递及接收参数 -->
+            <!-- {{formatType}} -->
           </template>
         </el-table-column>
         <el-table-column prop="enterprise_name" label="企业"></el-table-column>
@@ -231,6 +238,9 @@ export default {
         this.total = res.data.data.pagination.total;
       }
     },
+    // formatType(val) {
+    //   return this.typeObj[val]
+    // },
     // 搜索
     search() {
       this.page = 1;
@@ -291,6 +301,17 @@ export default {
       this.$refs.questionEditRef.mode = "add";
       this.$refs.questionEditRef.dialogVisible = true;
     }
+    // filters: {
+    //   formatType(val) {
+    //     return this.typeObj[val]
+    //   }
+    // }
+    // computed: {
+    //   formatType(val){
+    //     console.log('...val...',val)
+    //     return 'test'
+    //   }
+    // }
   }
 };
 </script>
