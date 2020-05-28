@@ -45,11 +45,16 @@
         <el-table-column label="操作" width="280">
           <template slot-scope="scope">
             <el-button type="primary" @click="editUser(scope.row)">编辑</el-button>
-            <el-button
+            <!-- <el-button
               @click="changeStatus(scope.row.id)"
               :type="scope.row.status === 0 ? 'success' : 'info'"
+            >{{scope.row.status === 0 ? '启用' : '禁用'}}</el-button>-->
+            <el-button
+              @click="changeStatus('/user/status',scope.row.id)"
+              :type="scope.row.status === 0 ? 'success' : 'info'"
             >{{scope.row.status === 0 ? '启用' : '禁用'}}</el-button>
-            <el-button @click="delteUser(scope.row.id,scope.row.username)" type="danger">删除</el-button>
+            <!-- <el-button @click="delteUser(scope.row.id,scope.row.username)" type="danger">删除</el-button> -->
+            <el-button @click="del('/user/remove',scope.row.id)" type="danger">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -72,8 +77,13 @@
 
 <script>
 import UserEdit from "./user-add-or-updata";
+// 导入混入对象
+import Common from "@/mixins/common.vue";
 export default {
   name: "UserList",
+  // mixins就是定义一部分公共的方法或者计算属性,然后混入到各个组件中使用,方便管理与统一修改。
+  // mixins 选项接受一个混入对象的数组。
+  mixins: [Common],
   components: {
     UserEdit
   },
@@ -92,10 +102,10 @@ export default {
   },
   created() {
     // 获取用户列表数据，用于内容展示
-    this.getUserData();
+    this.getData();
   },
   methods: {
-    async getUserData() {
+    async getData() {
       const res = await this.$axios.get("/user/list", {
         params: {
           page: this.page,
@@ -117,7 +127,8 @@ export default {
     // 搜索
     search() {
       this.page = 1; // 从第一页开始搜索
-      this.getUserData();
+      // this.getUserData();
+      this.getData();
     },
     // 清除
     clear() {
@@ -142,43 +153,44 @@ export default {
     handleCurrentChange(val) {
       // console.log(`当前页: ${val}`);
       this.page = val;
-      this.getUserData();
+      // 用混入解决(代码复用->相同代码)。需调用的方法名称是一样的(如果方法名不一样，那只能调用search方法)
+      this.getData();
     },
     // 更改当前行的状态
-    async changeStatus(id) {
-      const res = await this.$axios.post("/user/status", { id });
-      // console.log(res);
-      if (res.data.code === 200) {
-        this.$message({
-          type: "success",
-          message: "更改状态成功!"
-        });
-        // 重新查询
-        this.search();
-      }
-    },
+    // async changeStatus(id) {
+    //   const res = await this.$axios.post("/user/status", { id });
+    //   // console.log(res);
+    //   if (res.data.code === 200) {
+    //     this.$message({
+    //       type: "success",
+    //       message: "更改状态成功!"
+    //     });
+    //     // 重新查询
+    //     this.search();
+    //   }
+    // },
     // 删除
-    delteUser(id, username) {
-      // 提示
-      this.$confirm(`确定删除 ${username} 该用户吗？`, "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(async () => {
-          const res = await this.$axios.post("/user/remove", { id });
-          // console.log(res);
-          if (res.data.code === 200) {
-            this.$message({
-              type: "success",
-              message: "删除成功!"
-            });
-          }
-          // 更新数据
-          this.getUserData();
-        })
-        .catch(() => {});
-    },
+    // delteUser(id, username) {
+    //   // 提示
+    //   this.$confirm(`确定删除 ${username} 该用户吗？`, "提示", {
+    //     confirmButtonText: "确定",
+    //     cancelButtonText: "取消",
+    //     type: "warning"
+    //   })
+    //     .then(async () => {
+    //       const res = await this.$axios.post("/user/remove", { id });
+    //       // console.log(res);
+    //       if (res.data.code === 200) {
+    //         this.$message({
+    //           type: "success",
+    //           message: "删除成功!"
+    //         });
+    //       }
+    //       // 更新数据
+    //       this.getUserData();
+    //     })
+    //     .catch(() => {});
+    // },
     // 新增用户
     add() {
       // 让新增用户的对话框显示出来

@@ -44,11 +44,16 @@
         <el-table-column label="操作" width="280">
           <template slot-scope="scope">
             <el-button @click="edit(scope.row)" type="primary">编辑</el-button>
-            <el-button
+            <!-- <el-button
               @click="changeStatus(scope.row.id)"
               :type="scope.row.status === 0 ? 'success' : 'info'"
+            >{{scope.row.status === 0 ? '启用' : '禁用'}}</el-button>-->
+            <el-button
+              @click="changeStatus('/subject/status',scope.row.id)"
+              :type="scope.row.status === 0 ? 'success' : 'info'"
             >{{scope.row.status === 0 ? '启用' : '禁用'}}</el-button>
-            <el-button type="danger" @click="del(scope.row.id)">删除</el-button>
+            <!-- <el-button type="danger" @click="del(scope.row.id)">删除</el-button> -->
+            <el-button type="danger" @click="del('/subject/remove',scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -70,8 +75,11 @@
 
 <script>
 import subjectEdit from "@/views/layout/subject/subject-add-or-updata";
+// 导入混入对象
+import Common from "@/mixins/common";
 export default {
   name: "SubjectList",
+  mixins: [Common],
   components: {
     subjectEdit
   },
@@ -90,10 +98,25 @@ export default {
     };
   },
   created() {
-    this.getSubectListData();
+    // this.getSubectListData();
+    this.getData();
   },
   methods: {
-    async getSubectListData() {
+    // async getSubectListData() {
+    //   const res = await this.$axios.get("/subject/list", {
+    //     params: {
+    //       page: this.page,
+    //       limit: this.limit,
+    //       ...this.searchForm
+    //     }
+    //   });
+    //   // console.log(res);
+    //   if (res.data.code === 200) {
+    //     this.subjectList = res.data.data.items;
+    //     this.total = res.data.data.pagination.total;
+    //   }
+    // },
+    async getData() {
       const res = await this.$axios.get("/subject/list", {
         params: {
           page: this.page,
@@ -109,7 +132,8 @@ export default {
     },
     search() {
       this.page = 1;
-      this.getSubectListData();
+      // this.getSubectListData();
+      this.getData();
     },
     clear() {
       // 表单重置
@@ -128,37 +152,37 @@ export default {
         remark: "" //学科备注
       };
     },
-    async changeStatus(id) {
-      const res = await this.$axios.post("/subject/status", { id });
-      if (res.data.code === 200) {
-        this.$message({
-          type: "success",
-          message: "更改状态成功!"
-        });
-        // 刷新
-        this.getSubectListData();
-      }
-    },
-    del(id) {
-      // console.log(id);
-      this.$confirm("确定要删除改数据吗？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(async () => {
-          const res = await this.$axios.post("/subject/remove", { id });
-          if (res.data.code === 200) {
-            this.$message({
-              type: "success",
-              message: "删除成功!"
-            });
-            // 刷新
-            this.search();
-          }
-        })
-        .catch(() => {});
-    },
+    // async changeStatus(id) {
+    //   const res = await this.$axios.post("/subject/status", { id });
+    //   if (res.data.code === 200) {
+    //     this.$message({
+    //       type: "success",
+    //       message: "更改状态成功!"
+    //     });
+    //     // 刷新
+    //     this.getSubectListData();
+    //   }
+    // },
+    // del(id) {
+    //   // console.log(id);
+    //   this.$confirm("确定要删除改数据吗？", "提示", {
+    //     confirmButtonText: "确定",
+    //     cancelButtonText: "取消",
+    //     type: "warning"
+    //   })
+    //     .then(async () => {
+    //       const res = await this.$axios.post("/subject/remove", { id });
+    //       if (res.data.code === 200) {
+    //         this.$message({
+    //           type: "success",
+    //           message: "删除成功!"
+    //         });
+    //         // 刷新
+    //         this.search();
+    //       }
+    //     })
+    //     .catch(() => {});
+    // },
     // 页容量发生改变
     handleSizeChange(val) {
       this.limit = val;
@@ -167,7 +191,8 @@ export default {
     // 页码发生改变
     handleCurrentChange(val) {
       this.page = val;
-      this.getSubectListData();
+      // this.getSubectListData();
+      this.getData()
     },
     edit(row) {
       const { id, rid, name, short_name, intro, remark } = row;
