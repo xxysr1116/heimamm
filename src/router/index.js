@@ -20,6 +20,8 @@ import Parent from '@/test/parent-child-bother/parent'
 import Slot1 from '@/test/slot1/parent'
 import Slot2 from '@/test/slot2/parent'
 import Slot3 from '@/test/slot3'
+import VModel from '@/test/v-model'
+import vModelParent from '@/test/v-model/parent'
 
 
 // 按需导入
@@ -48,7 +50,9 @@ let router = new VueRouter({
         { path: "/slot1", component: Slot1 },
         { path: "/slot2", component: Slot2 },
         { path: "/parent", component: Parent },
-        { path: "/slot3", component: Slot3 }
+        { path: "/slot3", component: Slot3 },
+        { path: "/vModel", component: VModel },
+        { path: "/vModelParent", component: vModelParent },
     ]
 })
 

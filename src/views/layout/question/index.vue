@@ -139,7 +139,7 @@
         <el-table-column prop="reads" label="访问量"></el-table-column>
         <el-table-column label="操作" width="280">
           <template slot-scope="scope">
-            <el-button type="primary">编辑</el-button>
+            <el-button @click="edit(scope.row)" type="primary">编辑</el-button>
             <el-button
               @click="changeStatus(scope.row.id)"
               :type="scope.row.status === 0 ? 'success' : 'info'"
@@ -299,8 +299,43 @@ export default {
     },
     add() {
       this.$refs.questionEditRef.mode = "add";
+      this.$refs.questionEditRef.questionEditForm = {
+        // 这个里面的所有值，将来是传递给服务器的
+        subject: "", //学科
+        step: "", //阶段
+        enterprise: "", //企业
+        city: [], //城市
+        type: "1",
+        difficulty: "1", //题目难度
+        single_select_answer: "", //单选答案
+        multiple_select_answer: [], //多选答案
+        short_answer: "", //简答答案
+        video: "", //解析视频地址
+        select_options: [
+          {
+            label: "A",
+            text: "shift",
+            image: ""
+          },
+          {
+            label: "B",
+            text: "pop",
+            image: ""
+          },
+          {
+            label: "C",
+            text: "splice",
+            image: ""
+          },
+          {
+            label: "D",
+            text: "slice",
+            image: ""
+          }
+        ]
+      };
       this.$refs.questionEditRef.dialogVisible = true;
-    }
+    },
     // filters: {
     //   formatType(val) {
     //     return this.typeObj[val]
@@ -312,6 +347,25 @@ export default {
     //     return 'test'
     //   }
     // }
+    edit(row) {
+      this.$refs.questionEditRef.mode = "edit";
+      this.$refs.questionEditRef.questionEditForm = JSON.parse(
+        JSON.stringify(row)
+      );
+      if (row.city) {
+        this.$refs.questionEditRef.questionEditForm.city = row.city.split(",");
+      } else {
+        this.$refs.questionEditRef.questionEditForm.city = [];
+      }
+      if (row.multiple_select_answer) {
+        this.$refs.questionEditRef.questionEditForm.multiple_select_answer = row.multiple_select_answer.split(
+          ","
+        );
+      } else {
+        this.$refs.questionEditRef.questionEditForm.multiple_select_answer = [];
+      }
+      this.$refs.questionEditRef.dialogVisible = true;
+    }
   }
 };
 </script>

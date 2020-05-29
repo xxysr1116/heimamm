@@ -1,7 +1,7 @@
 <script>
 export default {
   methods: {
-    // 更改状态的方法
+    // 更改状态的公共方法
     async changeStatus(url, id) {
       const res = await this.$axios.post(url, { id });
       if (res.data.code === 200) {
@@ -13,7 +13,7 @@ export default {
         this.getData();
       }
     },
-    // 删除方法
+    // 删除的公共方法
     del(url, id) {
       this.$confirm("确定要删除该数据吗？", "提示", {
         confirmButtonText: "确定",
