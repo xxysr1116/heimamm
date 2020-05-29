@@ -16,7 +16,14 @@
 <script>
 export default {
     // 接收从父组件那传过来的value(也就是url)
-    props:['value']
+    props:['value'],
+    methods: {
+      changeValue(){
+        // 触发input事件(这里只能写input，因为v-model = :value + @input)
+        // 参数是更改的url，参数是可选的。
+        this.$emit('input','www.jd.com');
+      }
+    },
 }
 </script>
 
