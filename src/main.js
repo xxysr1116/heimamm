@@ -14,11 +14,15 @@ import '@/plugins/element.js'
 // 导入 request(封装axios)
 import '@/utils/request.js'
 
+// 导入store
+import store from '@/store'
+
 // 全局注册(哪需要这个组件，直接用就行。我们这个项目不需要全局注册)
 // import userEdit from '@/views/layout/user/user-add-or-updata'
 // Vue.component('vue-edit',userEdit)
 
 new Vue({
   render: h => h(App),
-  router
+  router,
+  store
 }).$mount('#app')
