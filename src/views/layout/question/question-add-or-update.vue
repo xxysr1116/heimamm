@@ -22,7 +22,7 @@
         </el-form-item>
         <el-form-item label="阶段" prop="step">
           <el-select class="selectWidth" v-model="questionEditForm.step" placeholder="请选择阶段">
-            <el-option v-for="(value,name) in stepObj" :key="name" :label="value" :value="+name"></el-option>
+            <el-option v-for="(value,name) in stepObj" :key="name" :label="value" :value="name"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="企业" prop="enterprise">

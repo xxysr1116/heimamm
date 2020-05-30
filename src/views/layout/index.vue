@@ -21,7 +21,20 @@
           class="el-menu-vertical-demo"
           :collapse="isCollapse"
         >
-          <el-menu-item index="/layout/welcome">
+        <!-- 实际开发中，后台会根据你登录用户是哪个角色，返回与之对应的权限列表 -->
+        <!-- 从vuex仓库拿到用户角色，判断roles数组是否包含用户角色 -->
+        <!-- 因为现在的接口后台没有给我们权限表，所以我们就利用路由的元信息，做一个简单的前端权限 -->
+          <el-menu-item
+            v-show="item.meta.roles.includes($store.getters.getUserInfo.role)"
+            v-for="item in $router.options.routes[2].children"
+            :key="item.path"
+            :index="item.meta.fullPath"
+          >
+            <i :class="item.meta.icon"></i>
+            <span slot="title">{{item.meta.title}}</span>
+          </el-menu-item>
+
+          <!-- <el-menu-item index="/layout/welcome">
             <i class="el-icon-date"></i>
             <span slot="title">个人信息</span>
           </el-menu-item>
@@ -44,7 +57,7 @@
           <el-menu-item index="/layout/subject">
             <i class="el-icon-notebook-2"></i>
             <span slot="title">学科列表</span>
-          </el-menu-item>
+          </el-menu-item>-->
         </el-menu>
       </el-aside>
       <el-main class="main" style="background-color:#e8e9ec;">
@@ -78,6 +91,10 @@ export default {
       if (res.data.code === 200) {
         this.avatarz = process.env.VUE_APP_BASEURL + "/" + res.data.data.avatar;
         this.username = res.data.data.username;
+
+        // 把数据保存到仓库中
+        // 触发 mutations中的方法
+        this.$store.commit("setUserInfo", res.data.data);
       }
     },
 
@@ -107,6 +124,7 @@ export default {
     // console.log(this.defaultActive);
     this.getuserInfoData();
     // console.log(this.$route);
+    // console.log(this.$router);
   }
 };
 </script>
